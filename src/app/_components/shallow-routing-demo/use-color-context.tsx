@@ -27,17 +27,13 @@ export const useColorState = () => {
   return context;
 };
 
-type EventState = { colorState: ColorState | undefined } | null;
-
 export const ColorStateProvider = ({ children }: { children: ReactNode }) => {
   const pathname = usePathname();
   const [colorState, setColorState] = useState<ColorState>("RED");
 
   useEffect(function setupPopStateListener() {
     const handlePopState = (event: PopStateEvent): void => {
-      const state = event.state as EventState;
-      if (!state?.colorState) return;
-      setColorState(state.colorState);
+      if (event.state?.colorState) setColorState(event.state.colorState);
     };
 
     window.addEventListener("popstate", handlePopState);
