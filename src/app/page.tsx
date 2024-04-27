@@ -1,4 +1,4 @@
-import { ShallowRoutingDemo } from "./_components/window-history-demo";
+import { ShallowRoutingDemo } from "./_components/shallow-routing-demo";
 
 export default function Home() {
   return (
