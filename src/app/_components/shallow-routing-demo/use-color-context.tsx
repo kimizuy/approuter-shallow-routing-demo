@@ -36,10 +36,9 @@ export const ColorProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(function setupPopStateListener() {
     const handlePopState = (event: PopStateEvent): void => {
-      if (event.state?.color) {
-        setColor(event.state.color);
-        setCount(event.state.count);
-      }
+      if (!event.state?.color) return;
+      setColor(event.state.color);
+      setCount(event.state.count);
     };
 
     window.addEventListener("popstate", handlePopState);
