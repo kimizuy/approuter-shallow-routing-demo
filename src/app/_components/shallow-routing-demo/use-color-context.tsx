@@ -7,33 +7,39 @@ import {
   ReactNode,
   useState,
   useEffect,
+  Dispatch,
+  SetStateAction,
 } from "react";
 
-type ColorState = "RED" | "BLUE" | "YELLOW";
+export type Color = "RED" | "BLUE" | "YELLOW";
 interface ColorContextType {
-  colorState: ColorState;
-  setColorState: (colorState: ColorState) => void;
+  color: Color;
+  count: number;
+  setColor: Dispatch<SetStateAction<Color>>;
+  setCount: Dispatch<SetStateAction<number>>;
 }
 
-const ColorStateContext = createContext<ColorContextType | undefined>(
-  undefined
-);
+const ColorContext = createContext<ColorContextType | undefined>(undefined);
 
-export const useColorState = () => {
-  const context = useContext(ColorStateContext);
+export const useColor = () => {
+  const context = useContext(ColorContext);
   if (!context) {
-    throw new Error("useColorState must be used within a ColorStateProvider");
+    throw new Error("useColor must be used within a ColorProvider");
   }
   return context;
 };
 
-export const ColorStateProvider = ({ children }: { children: ReactNode }) => {
+export const ColorProvider = ({ children }: { children: ReactNode }) => {
   const pathname = usePathname();
-  const [colorState, setColorState] = useState<ColorState>("RED");
+  const [color, setColor] = useState<Color>("RED");
+  const [count, setCount] = useState<number>(0);
 
   useEffect(function setupPopStateListener() {
     const handlePopState = (event: PopStateEvent): void => {
-      if (event.state?.colorState) setColorState(event.state.colorState);
+      if (event.state?.color) {
+        setColor(event.state.color);
+        setCount(event.state.count);
+      }
     };
 
     window.addEventListener("popstate", handlePopState);
@@ -45,21 +51,28 @@ export const ColorStateProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(
     function pushColorStateIfNeeded() {
-      const isInitialRender = !window.history.state?.colorState;
+      const isInitialRender = !window.history.state?.color;
       if (isInitialRender) {
-        window.history.replaceState({ colorState }, "", pathname);
+        window.history.replaceState({ color, count }, "", pathname);
         return;
       }
-      const isBrowserAction = window.history.state?.colorState === colorState;
+      const isBrowserAction = window.history.state?.color === color;
       if (isBrowserAction) return;
-      window.history.pushState({ colorState }, "", pathname);
+      window.history.pushState({ color, count }, "", pathname);
     },
-    [colorState, pathname]
+    [color, count, pathname]
   );
 
   return (
-    <ColorStateContext.Provider value={{ colorState, setColorState }}>
+    <ColorContext.Provider
+      value={{
+        color,
+        count,
+        setColor,
+        setCount,
+      }}
+    >
       {children}
-    </ColorStateContext.Provider>
+    </ColorContext.Provider>
   );
 };

@@ -1,13 +1,13 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { ColorStateProvider, useColorState } from "./use-color-context";
+import { Color, ColorProvider, useColor } from "./use-color-context";
 
 export function ShallowRoutingDemo() {
   const router = useRouter();
 
   return (
-    <ColorStateProvider>
+    <ColorProvider>
       <main className="flex min-h-screen flex-col items-center gap-16 p-24">
         <h1 className="text-4xl font-bold">
           Next.js App Router + Shallow Routing Demo
@@ -28,36 +28,51 @@ export function ShallowRoutingDemo() {
         </div>
         <RedBludYellow />
       </main>
-    </ColorStateProvider>
+    </ColorProvider>
   );
 }
 
 function RedBludYellow() {
-  const { colorState, setColorState } = useColorState();
+  const { color, count, setColor, setCount } = useColor();
+
+  const handleColorClick = (c: Color) => {
+    const isSameColor = c === color;
+    if (isSameColor) return;
+    setColor(c);
+    setCount((current) => current + 1);
+  };
 
   return (
     <div className="flex flex-row space-x-4">
       <button
         className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
-        onClick={() => setColorState("RED")}
+        onClick={() => {
+          handleColorClick("RED");
+        }}
       />
       <button
         className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-        onClick={() => setColorState("BLUE")}
+        onClick={() => {
+          handleColorClick("BLUE");
+        }}
       />
       <button
         className="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded"
-        onClick={() => setColorState("YELLOW")}
+        onClick={() => {
+          handleColorClick("YELLOW");
+        }}
       />
       <div
         className={`w-24 h-24 ${
-          colorState === "RED"
+          color === "RED"
             ? "bg-red-500"
-            : colorState === "BLUE"
+            : color === "BLUE"
             ? "bg-blue-500"
             : "bg-yellow-500"
-        }`}
-      />
+        } grid place-items-center text-white font-bold text-2xl`}
+      >
+        {count}
+      </div>
     </div>
   );
 }
