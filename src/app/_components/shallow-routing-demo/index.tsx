@@ -26,13 +26,13 @@ export function ShallowRoutingDemo() {
             Go Forward
           </button>
         </div>
-        <RedBludYellow />
+        <RedBlueYellow />
       </main>
     </ColorProvider>
   );
 }
 
-function RedBludYellow() {
+function RedBlueYellow() {
   const { color, count, setColor, setCount } = useColor();
 
   const handleColorClick = (c: Color) => {
@@ -43,35 +43,43 @@ function RedBludYellow() {
   };
 
   return (
-    <div className="flex flex-row space-x-4">
-      <button
-        className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
-        onClick={() => {
-          handleColorClick("RED");
-        }}
-      />
-      <button
-        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-        onClick={() => {
-          handleColorClick("BLUE");
-        }}
-      />
-      <button
-        className="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded"
-        onClick={() => {
-          handleColorClick("YELLOW");
-        }}
-      />
-      <div
-        className={`w-24 h-24 ${
-          color === "RED"
-            ? "bg-red-500"
-            : color === "BLUE"
-            ? "bg-blue-500"
-            : "bg-yellow-500"
-        } grid place-items-center text-white font-bold text-2xl`}
-      >
-        {count}
+    <div>
+      <div className="flex items-center">
+        <h2 className="w-36">Change history</h2>
+        <div className="flex items-center space-x-4">
+          <button
+            className="bg-red-500 hover:bg-red-700 h-24 w-8 rounded"
+            onClick={() => {
+              handleColorClick("RED");
+            }}
+          />
+          <button
+            className="bg-blue-500 hover:bg-blue-700 h-24 w-8 rounded"
+            onClick={() => {
+              handleColorClick("BLUE");
+            }}
+          />
+          <button
+            className="bg-yellow-500 hover:bg-yellow-700 h-24 w-8 rounded"
+            onClick={() => {
+              handleColorClick("YELLOW");
+            }}
+          />
+        </div>
+      </div>
+      <div className="flex items-center mt-8">
+        <h2 className="w-36">Current history</h2>
+        <div
+          className={`w-24 h-24 ${
+            color === "RED"
+              ? "bg-red-500"
+              : color === "BLUE"
+              ? "bg-blue-500"
+              : "bg-yellow-500"
+          } grid place-items-center text-white font-bold text-2xl`}
+        >
+          {count}
+        </div>
       </div>
     </div>
   );
